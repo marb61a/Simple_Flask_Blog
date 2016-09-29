@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-offset-3 col-md-6">
+            {% include '_flashmessages.html' %}
+            <h1><a href="{{ url_for('index') }}">{{ blog.name }}</a></h1>
+            
+            <div class="post-list">
+                {% for post in posts.items %}
+                <div class="row post-item">
+                    <div class="col-md-9">
+                        
+                    </div>
+                    <div class="col-md-3">
+                        
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="post-paginate">
+                
+            </div>
+        </div>
+    </div>
+{% endblock %}
