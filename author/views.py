@@ -33,3 +33,28 @@ def login() :
         else:
             error = 'Author not found'
     return render_template('author/login.html', form=form, error=error)
+    
+@app.route('/register', methods=('GET', 'POST'))
+def register():
+    form = RegisterForm()
+    if form.validate_on_submit():
+        salt = bcrypt.gensalt()
+        hashed_password = bcrypt.hashpw(form.password.data, salt)
+        author = Author(
+            form.fullname.data,
+            form.email.data,
+            form.username.data,
+            hashed_password,
+            False
+        )
+        db.session.add(author)
+        db.session.commit()
+        return redirect('/success')
+    return render_template('author/register.html', form=form)
+    
+@app.route('/logout')
+def logout():
+    session.pop('username')
+    session.pop('is_author')
+    flash("User logged out")
+    return redirect(url_for('index'))
