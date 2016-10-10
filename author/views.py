@@ -58,3 +58,12 @@ def logout():
     session.pop('is_author')
     flash("User logged out")
     return redirect(url_for('index'))
+
+@app.route('/success')
+def success():
+    return('Author Registered')
+    
+@app.route('/login_success')
+@login_required
+def login_success():
+    return 'Author logged in'
