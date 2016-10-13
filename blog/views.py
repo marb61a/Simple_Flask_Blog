@@ -43,4 +43,34 @@ def setup():
             hashed_password,
             True
         )
+        db.session.add(author)
+        db.session.flush()
+        if author.id:
+            blog = Blog(form.name.data, author.id)
+            db.session.add(blog)
+            db.session.flush()
+        else:
+            db.session.rollback()
+            error = "Error Creating User"
+        if author.id and blog.id:
+            db.session.commit()
+        else:
+            db.session.rollback()
+            error = "Error Creating Blog"
+        flash('Blog Created')
+        return redirect('/admin')
+    return render_template('blog/setup.html', form=form)
+
+@app.route('/post', methods=('GET', 'POST'))
+@author_required
+def post():
+    form = PostForm()
+    if form.validate_on_submit():
+        image = request.files.get('image')
+        filename = None
+        try:
+            filename = uploaded_images.save(image)
+        except:
+            flash("The image was not uploaded")
+            
     
