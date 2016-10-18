@@ -72,5 +72,23 @@ def post():
             filename = uploaded_images.save(image)
         except:
             flash("The image was not uploaded")
-            
+        if form.new_category.data:
+            new_category = Category(form.new_category.data)
+            db.session.add(new_category)
+            db.session.flush()
+            category = new_category
+        else:
+            category = form.category.data
+        blog = Blog.query.first()
+        author = Author.query.filter_by(username=session['username']).first()
+        title = form.title.data
+        form = form.body.data
+        slug = slugify(title)
+        post = Post(blog, author, title, body, category, filename, slug)
+        db.session.add(post)
+        db.session.commit()
+        return redirect(url_for('article', slug=slug))
+    return render_template('blog/post.html', form=form, action="new")
+
+
     
