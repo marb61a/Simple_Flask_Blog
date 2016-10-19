@@ -64,5 +64,46 @@ class UserTest(unittest.TestCase):
             ),
         follow_redirects = True)
         
+    def publish_post(self, title, body, category, new_category):
+        return self.app.post('/post', data=dict (
+            title=title,
+            body=body,
+            category=category,
+            new_category=new_category
+            ),
+        follow_redirects = True)
+        
+    # Beginning test functions with test allows unittest to detect 
+    # automatically identify test methods to run
     
+    def test_create_blog(self):
+        rv = self.create_blog()
+        assert 'Blog Created' in str(rv.data)
+    
+    def test_login_logout(self):
+        self.create_blog()
+        rv = self.login('joe', 'test')
+        assert 'User joe logged in' in str(rv.data)
+        rv = self.logout()
+        assert 'User logged out' in str(rv.data)
+        rv = self.login('john', 'test')
+        assert 'Author not found' in str(rv.data)
+        rv = self.login('joe', 'wrong')
+        assert 'Incorrect password' in str(rv.data)
+    
+    def test_admin(self):
+        self.create_blog()
+        self.login('joe', 'test')
+        rv = self.app.get('/admin', follow_redirects=True)
+        assert 'Welcome joe' in str(rv.data)
+        rv = self.logout()
+        rv = self.register_user('John Doe', 'john@example.com', 'john', 'test', 'test')
+        assert 'Author registered!' in str(rv.data)
+        rv = self.login('john', 'test')
+        assert 'User john logged in' in str(rv.data)
+        rv = self.app.get('/admin', follow_redirects=True)
+        assert "403 Forbidden" in str(rv.data)
+
+if __name__ == '__main__':
+    unittest.main()
         
