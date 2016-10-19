@@ -2,7 +2,7 @@ import os
 
 SECRET_KEY = 'you-will-never-guess'
 DEBUG = True
-DB_USERNAME = 'marb-pythonprojects-3571760'
+DB_USERNAME = ''
 DB_PASSWORD = ''
 BLOG_DATABASE_NAME = 'blog'
 DB_HOST = os.getenv('IP', '0.0.0.0')
